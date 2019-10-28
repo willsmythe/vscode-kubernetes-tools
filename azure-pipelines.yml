@@ -13,9 +13,6 @@ strategy:
 pool:
   vmImage: $(VM_IMAGE)
 
-variables:
-  DISPLAY: ':99.0'
-
 steps:
 - task: NodeTool@0
   inputs:
@@ -29,14 +26,22 @@ steps:
   condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
 
 - bash: |
+    npm ci
     npm install -g vsce
-  displayName: Install vsce
-
-- bash: npm ci
-  displayName: Install dependencies
+  displayName: Install dependencies and tools
 
 - bash: npx gulp tslint
   displayName: Run tslint
 
+- bash: npm run test
+  displayName: Run tests
+  env:
+    DISPLAY: ':99.0'
+
 - bash: vsce package
   displayName: Package extension
+
+- publish: $(Build.SourcesDirectory)/*.vsix
+  artifact: vsix
+  displayName: Package VSIX
+  condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
