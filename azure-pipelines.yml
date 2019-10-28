@@ -3,11 +3,11 @@ trigger:
 
 strategy:
   matrix:
-    linux:
+    Linux:
       VM_IMAGE: ubuntu-16.04
-    mac:
+    MacOS:
       VM_IMAGE: macOS-10.14
-    windows:
+    Windows:
       VM_IMAGE: windows-2019
 
 pool:
@@ -33,10 +33,10 @@ steps:
 - bash: npx gulp tslint
   displayName: Run tslint
 
-- bash: npm run test
-  displayName: Run tests
-  env:
-    DISPLAY: ':99.0'
+# - bash: npm run test
+#   displayName: Run tests
+#   env:
+#     DISPLAY: ':99.0'
 
 - bash: vsce package
   displayName: Package extension
